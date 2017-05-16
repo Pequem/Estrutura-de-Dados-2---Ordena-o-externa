@@ -18,13 +18,13 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Estrutura de Dados 2 - Ordenação externa.cpp">
+    <ClCompile Include="arq.c">
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>
-    <ClCompile Include="arq.cpp">
+    <ClCompile Include="bloco.c">
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>
-    <ClCompile Include="bloco.cpp">
+    <ClCompile Include="Estrutura de Dados 2 - Ordenação externa.c">
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>
   </ItemGroup>

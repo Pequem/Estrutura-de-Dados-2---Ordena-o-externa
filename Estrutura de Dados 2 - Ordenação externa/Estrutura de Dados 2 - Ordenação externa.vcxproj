@@ -142,9 +142,9 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="arq.cpp" />
-    <ClCompile Include="bloco.cpp" />
-    <ClCompile Include="Estrutura de Dados 2 - Ordenação externa.cpp" />
+    <ClCompile Include="arq.c" />
+    <ClCompile Include="bloco.c" />
+    <ClCompile Include="Estrutura de Dados 2 - Ordenação externa.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="arq.h" />
