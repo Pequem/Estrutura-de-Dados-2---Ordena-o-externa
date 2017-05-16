@@ -1,8 +1,11 @@
 // Estrutura de Dados 2 - Ordenação externa.cpp : Define o ponto de entrada para a aplicação de console.
 //
-#include "arq.h";
+#include "arq.h"
 #include "bloco.h"
 #define numRegistros 3
+#define true 1
+#define false 0
+#define OrdemIntercalacao 2
 
 void OrdeneExterno(char*);
 
@@ -50,7 +53,7 @@ void DescarregaPaginas(ArqEntradaTipo ArqSaida, char *Buffer) {
 }
 
 void OrdeneExterno(char *arquivo) {
-	const int OrdemIntercalacao = 2;
+	//int OrdemIntercalacao = 2; movido para definições
 	int NBlocos = 0;
 	ArqEntradaTipo ArqEntrada, ArqSaida;
 	ArqEntradaTipo ArrArqEnt[OrdemIntercalacao];

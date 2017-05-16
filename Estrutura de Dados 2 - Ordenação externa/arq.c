@@ -37,14 +37,14 @@ char* readLetters(FILE* file, int *eof) {
 	return letter;
 }
 
-void writeBloco(FILE* file, reg* registro) {
-	for (int i = 0; i < n; i++)
-	{
-		fwrite(&registro[i], sizeof(reg), 1, file);
-	}
-
-	return;
-}
+//void writeBloco(FILE* file, reg* registro) {
+//	for (int i = 0; i < n; i++)
+//	{
+//		fwrite(&registro[i], sizeof(reg), 1, file);
+//	}
+//
+//	return;
+//}
 
 void writeBloco(FILE* file, char* letter) {
 	for (int i = 0; i < n; i++)
