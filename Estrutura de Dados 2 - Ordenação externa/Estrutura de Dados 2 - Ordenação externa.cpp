@@ -85,4 +85,5 @@ void OrdeneExterno(char *arquivo) {
 	//	}
 	//	Low += OrdemIntercalacao;
 	//}   Mudar o nome do arquivo High para o nome fornecido pelo usuario;
+
 }
