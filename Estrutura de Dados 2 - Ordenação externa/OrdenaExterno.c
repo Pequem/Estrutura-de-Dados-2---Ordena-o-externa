@@ -74,8 +74,6 @@ void* getMenorElemento(void **c, int tam, int *posicao, int(*callback)(void*, vo
 
 void Intercale(ArqEntradaTipo *ArrArqEnt, int Low, int Lim, ArqEntradaTipo ArqSaida, int OrdemIntercalacao, int tamReg, int(*callback)(void*, void*))
 {
-	char *a;
-
 	const int tam = Lim - Low;
 	int i, j, posicao;
 	void *c1;
@@ -89,8 +87,7 @@ void Intercale(ArqEntradaTipo *ArrArqEnt, int Low, int Lim, ArqEntradaTipo ArqSa
 	}
 	do {
 		c1 = getMenorElemento(c, tam, &posicao, callback);
-		a = c1;
-		fwrite(a, tamReg, 1, ArqSaida);
+		fwrite(c1, tamReg, 1, ArqSaida);
 		fread(c1, tamReg, 1, ArrArqEnt[posicao]);
 		if (feof(ArrArqEnt[posicao])) {
 			blocosFinalizados++;
@@ -99,7 +96,7 @@ void Intercale(ArqEntradaTipo *ArrArqEnt, int Low, int Lim, ArqEntradaTipo ArqSa
 		else {
 			c[posicao] = c1;
 		}
-	} while (blocosFinalizados != OrdemIntercalacao);
+	} while (blocosFinalizados <= tam);
 	free(c);
 }
 

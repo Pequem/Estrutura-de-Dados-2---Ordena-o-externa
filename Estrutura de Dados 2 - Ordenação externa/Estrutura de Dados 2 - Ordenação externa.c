@@ -30,6 +30,6 @@ int main(int argc, char **argv)
 	printf("Criando arquivo de teste");
 	//criaArquivoTeste();
 	printf("Ordenando");
-	OrdeneExterno("teste.txt", "final", 20, 10000, sizeof(char), cmpfunc);
+	OrdeneExterno("teste.txt", "final", 7, 2, sizeof(char), cmpfunc);
 	return 0;
 }
