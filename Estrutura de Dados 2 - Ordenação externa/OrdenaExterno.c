@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "OrdenaExterno.h"
 
 void AbreArqEntrada(ArqEntradaTipo* ArrArqEnt, int Low, int Lim)
