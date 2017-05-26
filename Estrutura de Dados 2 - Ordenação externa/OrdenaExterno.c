@@ -8,35 +8,52 @@ void AbreArqEntrada(ArqEntradaTipo* ArrArqEnt, int Low, int Lim)
 	for (i = Low; i <= Lim; i++)
 	{
 		sprintf(name, "%i", i);
-		ArrArqEnt[j] = fopen(name, "r+");
+		ArrArqEnt[j] = fopen(name, "rb");
 		j++;
 	}
 }
 
-ArqEntradaTipo AbrirArquivoDeEntrada(char *arquivoNome) {
-	return fopen(arquivoNome, "r");
+ArqEntradaTipo AbrirArquivoDeEntrada(char *arquivoNome, int arquivoTexto) {
+	if (arquivoTexto) {
+		return fopen(arquivoNome, "r");
+	}
+	return fopen(arquivoNome, "rb");
 }
 
 ArqEntradaTipo AbreArqSaida(int NBlocos) {
 	char bloco[10];
 	sprintf(bloco, "%i", NBlocos);	
-	return fopen(bloco, "w");
+	return fopen(bloco, "wb");
 }
 
-int EnchePaginas(int NBlocos, ArqEntradaTipo arquivo, void **Buffer, int *blocosLidos, int numRegistros, int tamReg) {
+int EnchePaginas(int NBlocos, ArqEntradaTipo arquivo, void **Buffer, int *blocosLidos, int numRegistros, int tamReg, void(*leituraPersonalizada)(FILE*, void*)) {
 	int i;
 	void *c;
 	*blocosLidos = 0;
-	for (i = 0; i < numRegistros; i++) {
-		c = malloc(tamReg);
-		fread(c, tamReg, 1, arquivo);
-		if (feof(arquivo)) {
-			Buffer[i] = NULL;
-			free(c);
-			return true;
+	if (leituraPersonalizada) {
+		for (i = 0; i < numRegistros; i++) {
+			leituraPersonalizada(arquivo, c);
+			if (feof(arquivo)) {
+				Buffer[i] = NULL;
+				free(c);
+				return true;
+			}
+			Buffer[i] = c;
+			(*blocosLidos)++;
 		}
-		Buffer[i] = c;
-		(*blocosLidos)++;
+	}
+	else {
+		for (i = 0; i < numRegistros; i++) {
+			c = malloc(tamReg);
+			fread(c, tamReg, 1, arquivo);
+			if (feof(arquivo)) {
+				Buffer[i] = NULL;
+				free(c);
+				return true;
+			}
+			Buffer[i] = c;
+			(*blocosLidos)++;
+		}
 	}
 	if (feof(arquivo)) {
 		return true;
@@ -64,7 +81,7 @@ void* getMenorElemento(void **c, int tam, int *posicao, int(*callback)(const voi
 	}
 	for (i = 0; i <= tam; i++) {
 		if (c[i] == NULL) continue;
-		if (callback(&menor, &c[i]) > 0) {
+		if (callback((const void**)&menor, (const void**)&c[i]) > 0) {
 			menor = c[i];
 			*posicao = i;
 		}
@@ -124,17 +141,55 @@ int verificaBufferVazio(void **buffer) {
 	return false;
 }
 
-void OrdeneExterno(char *arquivo, char* arquivoFinal, int OrdemIntercalacao, int numRegistros, int tamReg, int(*callback)(const void**,const void**)) {
+void MudarNomeArquivo(int arquivo, char* arquivoFinal, int tamReg, void(*escritaPersonalizada)(FILE*, void*)) {
+	
+	char *arquivoName;
+	FILE *arqSaida, *arqEntrada;
+	void *reg;
+	
+	reg = malloc(tamReg);
+	arquivoName = (char*)malloc(sizeof(char) * 20);
+	sprintf(arquivoName, "%i", arquivo);
+	
+	if (escritaPersonalizada) {
+		arqEntrada = fopen(arquivoName, "r");
+		arqSaida = fopen(arquivoFinal, "w");
+		do {
+			fread(reg, tamReg, 1, arqEntrada);
+			if (feof(arqEntrada)) break;
+			escritaPersonalizada(arqSaida, reg);
+		} while (1);
+	}
+	else {
+		arqEntrada = fopen(arquivoName, "rb");
+		arqSaida = fopen(arquivoFinal, "wb");
+		do {
+			fread(reg, tamReg, 1, arqEntrada);
+			if (feof(arqEntrada)) break;
+			fwrite(reg, tamReg, 1, arqSaida);
+		} while (1);
+	}
+
+	fclose(arqEntrada);
+	fclose(arqSaida);
+
+	remove(arquivoName);
+	
+	free(arquivoName);
+	free(reg);
+}
+
+void OrdeneExterno(char *arquivo, char* arquivoFinal, int OrdemIntercalacao, int numRegistros, int tamReg, int(*callback)(const void**,const void**), void(*leituraPersonalizada)(FILE*, void*), void(*escritaPersonalizada)(FILE*, void*)) {
 	int NBlocos = 0;
 	ArqEntradaTipo ArqEntrada, ArqSaida;
 	ArqEntradaTipo *ArrArqEnt = (ArqEntradaTipo*) malloc(sizeof(ArqEntradaTipo)*OrdemIntercalacao);
 	short Fim;
 	int Low, High, Lim, nBlocosLidos = 0, i, j;
 	void **buffer = malloc(sizeof(void*)*numRegistros);
-	ArqEntrada = AbrirArquivoDeEntrada(arquivo);
+	ArqEntrada = AbrirArquivoDeEntrada(arquivo, leituraPersonalizada?1:0 );
 	do   /*Formacao inicial dos NBlocos ordenados */
 	{
-		Fim = EnchePaginas(NBlocos, ArqEntrada, buffer, &nBlocosLidos, numRegistros, tamReg);
+		Fim = EnchePaginas(NBlocos, ArqEntrada, buffer, &nBlocosLidos, numRegistros, tamReg, leituraPersonalizada);
 		if (verificaBufferVazio(buffer)) break;
 		NBlocos++;
 		qsort(buffer, nBlocosLidos, sizeof(void*), callback);
@@ -159,7 +214,7 @@ void OrdeneExterno(char *arquivo, char* arquivoFinal, int OrdemIntercalacao, int
 		}
 		Low += OrdemIntercalacao;
 	}   //Mudar o nome do arquivo High para o nome fornecido pelo usuario;
-
+	MudarNomeArquivo(High,arquivoFinal,tamReg, escritaPersonalizada);
 	free(ArrArqEnt);
 	free(buffer);
 
