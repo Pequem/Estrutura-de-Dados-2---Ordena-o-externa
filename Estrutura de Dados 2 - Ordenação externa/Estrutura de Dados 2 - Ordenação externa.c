@@ -9,9 +9,6 @@
 
 int main(int argc, char **argv)
 {
-	//teste
-
-	//teste2
 	ramdomReg("teste1.bin", 16);
 	OrdeneExterno("teste1.bin", "final.bin", 5, 50, sizeof(Reg), cmpFuncReg, NULL, NULL);
 	_CrtDumpMemoryLeaks();
