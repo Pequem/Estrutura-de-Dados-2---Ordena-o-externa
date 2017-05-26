@@ -4,22 +4,22 @@
 void AbreArqEntrada(ArqEntradaTipo* ArrArqEnt, int Low, int Lim)
 {
 	char name[10];
-	int j = 0;
-	for (int i = Low; i <= Lim; i++)
+	int j = 0, i;
+	for (i = Low; i <= Lim; i++)
 	{
-		itoa(i, name, 10);
+		sprintf(name, "%i", i);
 		ArrArqEnt[j] = fopen(name, "r+");
 		j++;
 	}
 }
 
 ArqEntradaTipo AbrirArquivoDeEntrada(char *arquivoNome) {
-	return fopen(arquivoNome, "r+");
+	return fopen(arquivoNome, "r");
 }
 
 ArqEntradaTipo AbreArqSaida(int NBlocos) {
 	char bloco[10];
-	itoa(NBlocos, bloco, 10);
+	sprintf(bloco, "%i", NBlocos);	
 	return fopen(bloco, "w");
 }
 
@@ -53,7 +53,7 @@ void DescarregaPaginas(ArqEntradaTipo ArqSaida, void **Buffer, int numRegistros,
 	}
 }
 
-void* getMenorElemento(void **c, int tam, int *posicao, int(*callback)(void*, void*)) {
+void* getMenorElemento(void **c, int tam, int *posicao, int(*callback)(const void**,const void**)) {
 	int i = 0;
 	void *menor;
 	*posicao = 0;
@@ -73,7 +73,7 @@ void* getMenorElemento(void **c, int tam, int *posicao, int(*callback)(void*, vo
 	return menor;
 }
 
-void Intercale(ArqEntradaTipo *ArrArqEnt, int Low, int Lim, ArqEntradaTipo ArqSaida, int OrdemIntercalacao, int tamReg, int(*callback)(void*, void*))
+void Intercale(ArqEntradaTipo *ArrArqEnt, int Low, int Lim, ArqEntradaTipo ArqSaida, int OrdemIntercalacao, int tamReg, int(*callback)(const void**,const void**))
 {
 	const int tam = Lim - Low;
 	int i, j, posicao;
@@ -112,7 +112,8 @@ int Minimo(int Low, int High)
 
 void Apague_Arquivo(int i) {
 	char name[10];
-	itoa(i, name, 10);
+	//itoa(i, name, 10);
+	sprintf(name, "%i", i);
 	remove(name);
 }
 
@@ -123,7 +124,7 @@ int verificaBufferVazio(void **buffer) {
 	return false;
 }
 
-void OrdeneExterno(char *arquivo, char* arquivoFinal, int OrdemIntercalacao, int numRegistros, int tamReg, int(callback)(void*, void*)) {
+void OrdeneExterno(char *arquivo, char* arquivoFinal, int OrdemIntercalacao, int numRegistros, int tamReg, int(*callback)(const void**,const void**)) {
 	int NBlocos = 0;
 	ArqEntradaTipo ArqEntrada, ArqSaida;
 	ArqEntradaTipo *ArrArqEnt = (ArqEntradaTipo*) malloc(sizeof(ArqEntradaTipo)*OrdemIntercalacao);

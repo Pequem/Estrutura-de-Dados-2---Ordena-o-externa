@@ -144,11 +144,9 @@
   <ItemGroup>
     <ClCompile Include="Estrutura de Dados 2 - Ordenação externa.c" />
     <ClCompile Include="OrdenaExterno.c" />
-    <ClCompile Include="typeChar.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OrdenaExterno.h" />
-    <ClInclude Include="typeChar.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
