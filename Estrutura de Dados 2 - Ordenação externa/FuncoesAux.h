@@ -2,7 +2,7 @@
 #define FUNCOESAUX_H_
 
 typedef struct {
-	int chave;
+	char chave;
 	char lixo[27];
 }Reg;
 

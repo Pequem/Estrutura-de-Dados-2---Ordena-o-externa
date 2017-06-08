@@ -15,7 +15,7 @@ void AbreArqEntrada(ArqEntradaTipo* ArrArqEnt, int Low, int Lim)
 
 ArqEntradaTipo AbrirArquivoDeEntrada(char *arquivoNome, int arquivoTexto) {
 	if (arquivoTexto) {
-		return fopen(arquivoNome, "r");
+		return fopen(arquivoNome, "rb");
 	}
 	return fopen(arquivoNome, "rb");
 }
@@ -26,16 +26,15 @@ ArqEntradaTipo AbreArqSaida(int NBlocos) {
 	return fopen(bloco, "wb");
 }
 
-int EnchePaginas(int NBlocos, ArqEntradaTipo arquivo, void **Buffer, int *blocosLidos, int numRegistros, int tamReg, void(*leituraPersonalizada)(FILE*, void*)) {
+int EnchePaginas(int NBlocos, ArqEntradaTipo arquivo, void **Buffer, int *blocosLidos, int numRegistros, int tamReg, void*(*leituraPersonalizada)(FILE*)) {
 	int i;
 	void *c;
 	*blocosLidos = 0;
 	if (leituraPersonalizada) {
 		for (i = 0; i < numRegistros; i++) {
-			leituraPersonalizada(arquivo, c);
+			c = leituraPersonalizada(arquivo);
 			if (feof(arquivo)) {
 				Buffer[i] = NULL;
-				free(c);
 				return true;
 			}
 			Buffer[i] = c;
@@ -152,7 +151,7 @@ void MudarNomeArquivo(int arquivo, char* arquivoFinal, int tamReg, void(*escrita
 	sprintf(arquivoName, "%i", arquivo);
 	
 	if (escritaPersonalizada) {
-		arqEntrada = fopen(arquivoName, "r");
+		arqEntrada = fopen(arquivoName, "rb");
 		arqSaida = fopen(arquivoFinal, "w");
 		do {
 			fread(reg, tamReg, 1, arqEntrada);
@@ -179,7 +178,7 @@ void MudarNomeArquivo(int arquivo, char* arquivoFinal, int tamReg, void(*escrita
 	free(reg);
 }
 
-void OrdeneExterno(char *arquivo, char* arquivoFinal, int OrdemIntercalacao, int numRegistros, int tamReg, int(*callback)(const void**,const void**), void(*leituraPersonalizada)(FILE*, void*), void(*escritaPersonalizada)(FILE*, void*)) {
+void OrdeneExterno(char *arquivo, char* arquivoFinal, int OrdemIntercalacao, int numRegistros, int tamReg, int(*callback)(const void**,const void**), void*(*leituraPersonalizada)(FILE*), void(*escritaPersonalizada)(FILE*, void*)) {
 	int NBlocos = 0;
 	ArqEntradaTipo ArqEntrada, ArqSaida;
 	ArqEntradaTipo *ArrArqEnt = (ArqEntradaTipo*) malloc(sizeof(ArqEntradaTipo)*OrdemIntercalacao);
