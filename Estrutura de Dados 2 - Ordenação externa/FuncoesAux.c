@@ -60,6 +60,23 @@ void ramdomInt(char *name, int n) {
 	}
 	fclose(f);
 }
+void ramdomRegTexto(char *name, int n) {
+	int i, valor = 2;
+	for (i = 1; i < n; i++) {
+		valor = valor * 2;
+	}
+	char aux;
+	FILE *f;
+	f = fopen(name, "w");
+
+	for (i = 0; i < valor; i++) {
+		do {
+			aux = rand();
+		} while ((aux == '\n') || (aux == '\r'));
+		fprintf(f, "%c\n", aux);
+	}
+	fclose(f);
+}
 
 //PRINTS
 void printInt() {
@@ -71,3 +88,25 @@ void printInt() {
 		printf("%i\n", x);
 	} while (!feof(f));
 }
+
+//entrada e saida personalizada
+void* ler(FILE *arquivo) {
+	Reg *c = malloc(sizeof(Reg));
+	if (arquivo) {
+		do {
+			fscanf(arquivo, "%c", &(c->chave));
+			if (feof(arquivo)) {
+				free(c);
+			}
+		} while (c->chave == '\n' || c->chave == '\r');
+	}
+	return c;
+}
+
+void escreve(FILE *arquivo, void* reg) {
+	Reg *aux = reg;
+	if (arquivo) {
+		fprintf(arquivo, "%c\n", aux->chave);
+	}
+}
+
