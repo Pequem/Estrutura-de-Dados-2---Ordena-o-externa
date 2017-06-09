@@ -11,8 +11,11 @@
 int main(int argc, char **argv)
 {
 	//teste2222
-	ramdomReg("teste1.bin", 16);
-	OrdeneExterno("teste1.bin", "final.bin", 5, 50, sizeof(Reg), cmpFuncReg, NULL, NULL);
+	ramdomReg("teste1.bin", 20);
+	clock_t start = clock();
+	OrdeneExterno("teste1.bin", "final.bin", 2, 262144, sizeof(Reg), cmpFuncReg, NULL, NULL);
+	clock_t end = clock();
+	printf("%f",(float) (end - start)/CLOCKS_PER_SEC );
 	_CrtDumpMemoryLeaks();
 	return 0;
 }
