@@ -71,3 +71,47 @@ void printInt() {
 		printf("%i\n", x);
 	} while (!feof(f));
 }
+
+void printReg(int n, char *fn) {
+	int i;
+	FILE *f;
+	f = fopen(fn, "rb");
+	Reg aux;
+	for (i = 0; i < n; i++) {
+		fread(&aux, sizeof(Reg), 1, f);
+		printf("%i\n", aux.chave);
+	}
+	fclose(f);
+}
+
+//checagem
+void checkReg(char *nameIn, char *nameOut) {
+	FILE *fOut, *fIn;
+	Reg r;
+	int aux = 0, numIn = 0, numOut = 0, test = 0;
+
+	fIn = fopen(nameIn, "rb");
+	fOut = fopen(nameOut, "rb");
+	do {
+		test = fread(&r, sizeof(Reg), 1, fIn);
+		if (!test) break;
+		numIn++;
+	} while (1);
+
+	do {
+		test = fread(&r, sizeof(Reg), 1, fOut);
+		if (aux > r.chave) {
+			printf(", ERRO\n");
+			return;
+		}
+		if (!test) break;
+		aux = r.chave;
+		numOut++;
+	} while (1);
+	if (numIn == numOut) {
+		printf(", Ordenacao OK, registros verificados = %i\n", numOut);
+	}
+	else {
+		printf(", ERRO\n");
+	}
+}

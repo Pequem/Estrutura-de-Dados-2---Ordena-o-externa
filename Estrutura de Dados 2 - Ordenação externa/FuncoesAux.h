@@ -14,5 +14,8 @@ void ramdomReg(char *name, int n);
 void ramdomInt(char *name, int n);
 
 void printInt();
+void printReg(int n, char *fn);
 
+//checagens	
+void checkReg(char *, char*);
 #endif
