@@ -10,6 +10,11 @@
 
 int main(int argc, char **argv)
 {
+	ramdomReg("t.bin", 5);
+	OrdeneExterno("t.bin", "f.bin", 2, 10, sizeof(Reg), cmpFuncReg, NULL, NULL);
+	printReg(30,"f.bin");
+	return 0;
+
 	//FILE *csv = fopen("out.csv", "w");
 
 	int f, e, m[3] = { 4, 16,256 }, mi, mAux, i;
