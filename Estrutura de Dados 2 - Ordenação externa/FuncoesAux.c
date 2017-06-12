@@ -31,17 +31,18 @@ void ramdomReg(char *name, int n) {
 	for (i = 1; i < n; i++) {
 		valor = valor * 2;
 	}
-	Reg aux;
+	Reg *aux = calloc(sizeof(Reg), 1);
 	FILE *f;
 	f = fopen(name, "wb");
 
 	for (i = 0; i < valor; i++) {
-		aux.chave = rand();
+		aux->chave = rand();
 		for (j = 0; j < 27; j++) {
-			aux.lixo[j] = rand();
+			aux->lixo[j] = rand();
 		}
-		fwrite(&aux, sizeof(Reg), 1, f);
+		fwrite(aux, sizeof(Reg), 1, f);
 	}
+	free(aux);
 	fclose(f);
 }
 
@@ -85,7 +86,7 @@ void printReg(int n, char *fn) {
 }
 
 //checagem
-void checkReg(char *nameIn, char *nameOut) {
+int checkReg(char *nameIn, char *nameOut) {
 	FILE *fOut, *fIn;
 	Reg r;
 	int aux = 0, numIn = 0, numOut = 0, test = 0;
@@ -101,17 +102,38 @@ void checkReg(char *nameIn, char *nameOut) {
 	do {
 		test = fread(&r, sizeof(Reg), 1, fOut);
 		if (aux > r.chave) {
-			printf(", ERRO\n");
-			return;
+			return 0;
 		}
 		if (!test) break;
 		aux = r.chave;
 		numOut++;
 	} while (1);
 	if (numIn == numOut) {
-		printf(", Ordenacao OK, registros verificados = %i\n", numOut);
+		return 1;
 	}
 	else {
-		printf(", ERRO\n");
+		return 0;
+	}
+}
+
+//entrada e saida personalizada
+void* ler(FILE *arquivo) {
+	Reg *c = calloc(sizeof(Reg), 1);
+	if (arquivo) {
+		do {
+			fscanf(arquivo, "%c", &(c->chave));
+			if (feof(arquivo)) {
+				free(c);
+				return NULL;
+			}
+		} while (c->chave == '\n' || c->chave == '\r');
+	}
+	return c;
+}
+
+void escreve(FILE *arquivo, void* reg) {
+	Reg *aux = reg;
+	if (arquivo) {
+		fprintf(arquivo, "%c\n", aux->chave);
 	}
 }

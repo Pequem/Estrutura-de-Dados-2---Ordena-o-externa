@@ -128,7 +128,6 @@ int Minimo(int Low, int High)
 
 void Apague_Arquivo(int i) {
 	char name[10];
-	//itoa(i, name, 10);
 	sprintf(name, "%i", i);
 	remove(name);
 }

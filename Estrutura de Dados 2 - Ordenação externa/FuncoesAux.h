@@ -17,5 +17,9 @@ void printInt();
 void printReg(int n, char *fn);
 
 //checagens	
-void checkReg(char *, char*);
+int checkReg(char *, char*);
+
+//entrada e saida personalizada
+void* ler(FILE *);
+void escreve(FILE *, void *);
 #endif

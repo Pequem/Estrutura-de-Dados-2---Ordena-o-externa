@@ -12,7 +12,7 @@ int main(int argc, char **argv)
 {
 	ramdomReg("t.bin", 5);
 	OrdeneExterno("t.bin", "f.bin", 2, 10, sizeof(Reg), cmpFuncReg, NULL, NULL);
-	printReg(30,"f.bin");
+	printf("%i",checkReg("t.bin", "f.bin"));
 	return 0;
 
 	//FILE *csv = fopen("out.csv", "w");
